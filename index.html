@@ -228,20 +228,21 @@
                 content: `
                     <h2>1. Vấn đề bảo mật IoT cần giải quyết</h2>
                     <p>Trong kỷ nguyên Công nghiệp 4.0, sự bùng nổ của Internet of Things (IoT) đã mang lại sự kết nối vô tiền khoáng hậu. Tuy nhiên, đi kèm với tiện ích là một <strong>"thảm họa bảo mật chực chờ"</strong>. Khác với các thiết bị IT truyền thống như PC hay Server vốn có tài nguyên dồi dào để chạy các phần mềm diệt virus phức tạp, thiết bị IoT (như Camera IP, Smart Router, cảm biến công nghiệp) thường là các hệ thống nhúng (Embedded Systems) bị giới hạn nghiêm ngặt về năng lực xử lý (CPU), bộ nhớ (RAM/ROM) và điện năng tiêu thụ.</p>
-                    <p>Chính sự hạn chế về tài nguyên này, kết hợp với thói quen <strong>"triển khai nhanh - bỏ quên bảo trì"</strong> (Deploy and Forget) của cả người dùng lẫn nhà sản xuất, đã dẫn đến những lỗ hổng sơ đẳng nhưng chí mạng. Việc sử dụng mật khẩu mặc định (hardcoded credentials), mở các dịch vụ mạng không cần thiết (Telnet/FTP) ráo riết ra môi trường Internet, và thiếu vắng cơ chế cập nhật firmware tự động đã biến hàng triệu thiết bị IoT trở thành mồi ngon cho các mạng lưới máy tính ma (Botnet).</p>
-                    <p>Phạm vi của bài tiểu luận này tập trung vào việc <strong>khảo sát nguyên nhân gốc rễ khiến thiết bị cấu hình kém bị chiếm quyền</strong>, giải phẫu vòng đời của một mạng Botnet điển hình dưới lăng kính phòng thủ, và từ đó đề xuất các checklist tăng cường bảo mật (hardening) thực tiễn, tuyệt đối không hướng tới việc khai thác hay phá hoại hệ thống thực.</p>
+                    <p>Chính sự hạn chế về tài nguyên này, kết hợp với thói quen <strong>"triển khai nhanh - bỏ quên bảo trì"</strong> (Deploy and Forget) của cả người dùng lẫn nhà sản xuất, đã dẫn đến những lỗ hổng sơ đẳng nhưng chí mạng. Phạm vi của báo cáo tập trung vào việc <strong>khảo sát nguyên nhân gốc rễ khiến thiết bị cấu hình kém bị chiếm quyền</strong>, giải phẫu vòng đời Botnet, và đề xuất checklist hardening, tuân thủ nghiêm ngặt ranh giới an toàn, không thực hiện khai thác phá hoại.</p>
 
                     <h2>2. Cơ sở lý thuyết (Nguồn: OWASP)</h2>
-                    <h3>a. Dự án OWASP Internet of Things (IoT)</h3>
-                    <p>Tổ chức OWASP (Open Worldwide Application Security Project) đã chỉ ra rằng bề mặt tấn công của IoT không chỉ nằm ở bản thân thiết bị (Device), mà còn ở Web Dashboard, API kết nối và ứng dụng Mobile đi kèm. Tuy nhiên, nguyên nhân cốt lõi khiến thiết bị bị "bắt cóc" vào Botnet thường rơi vào Top 3 lỗ hổng của <em>OWASP IoT Top 10</em>:</p>
+                    <p>Dự án OWASP (Open Worldwide Application Security Project) đã chỉ ra nguyên nhân cốt lõi khiến thiết bị bị "bắt cóc" vào Botnet thường rơi vào Top 3 lỗ hổng của <em>OWASP IoT Top 10</em>:</p>
                     <ul>
-                        <li><strong>I1 - Weak, Guessable, or Hardcoded Passwords:</strong> Sử dụng thông tin xác thực dễ đoán, được mã hóa cứng trong firmware hoặc mật khẩu backdoor do nhà sản xuất cài đặt nhằm mục đích gỡ lỗi (debug) nhưng quên xóa trước khi xuất xưởng.</li>
-                        <li><strong>I2 - Insecure Network Services:</strong> Mở các cổng dịch vụ mạng rủi ro cao như Telnet (Port 23), SSH (Port 22), hoặc các dịch vụ UPnP, SSDP mà không có cơ chế xác thực mạnh hay giới hạn IP truy cập, tạo điều kiện cho các máy quét mạng (Network Scanners) dễ dàng phát hiện.</li>
-                        <li><strong>I3 - Lack of Secure Update Mechanism:</strong> Không có khả năng cập nhật OTA (Over-The-Air) một cách an toàn. Các tệp tin firmware truyền đi dưới dạng bản rõ (HTTP), không được ký số (Digital Signature), dẫn đến không thể vá các lỗ hổng (CVE) đã được công bố một cách kịp thời, hoặc có thể bị tấn công Man-in-the-Middle (MitM) để tráo đổi firmware độc hại.</li>
+                        <li><strong>Mật khẩu yếu, mặc định (Weak/Hardcoded Passwords):</strong> Sử dụng thông tin xác thực dễ đoán, được mã hóa cứng trong firmware hoặc mật khẩu backdoor do nhà sản xuất cài đặt.</li>
+                        <li><strong>Dịch vụ mạng không an toàn (Insecure Network Services):</strong> Mở các cổng dịch vụ mạng rủi ro cao như Telnet (Port 23), SSH (Port 22), hoặc UPnP mà không có cơ chế xác thực mạnh hay giới hạn IP.</li>
+                        <li><strong>Cập nhật yếu kém (Lack of Secure Update Mechanism):</strong> Không có khả năng cập nhật OTA (Over-The-Air) một cách an toàn, file truyền dạng bản rõ (HTTP), không ký số, khiến không thể vá lỗ hổng (CVE) kịp thời.</li>
                     </ul>
 
-                    <h3>b. Môi trường học tập IoTGoat</h3>
-                    <p>Việc kiểm thử bảo mật trên các thiết bị IoT thật mang lại rủi ro pháp lý và có thể làm hỏng thiết bị (brick). Do đó, dự án này tận dụng <strong>OWASP IoTGoat</strong>. Đây là một bản firmware mã nguồn mở (dựa trên nền tảng OpenWrt) được thiết kế có chủ đích chứa đựng các lỗ hổng bảo mật phổ biến nhất. IoTGoat đóng vai trò như một môi trường "hộp cát" (Sandbox) lý tưởng để sinh viên có thể mổ xẻ cấu trúc file hệ thống (như <code>/etc/shadow</code>), phân tích log, và thấu hiểu cách thức mã độc tương tác với hệ điều hành nhúng mà không gây ra bất kỳ ảnh hưởng nào đến thế giới thực.</p>
+                    <div class="mt-8 p-5 bg-slate-800/40 rounded-xl border border-slate-700/50">
+                        <h4 class="text-cyan-400 font-bold mb-2 text-sm uppercase tracking-wider"><i class="fa-solid fa-link mr-2"></i>Tài liệu tham khảo phần 1</h4>
+                        <p class="text-sm text-slate-400 mb-1">Cơ sở lý thuyết được tham chiếu trực tiếp từ dự án OWASP IoT Project:</p>
+                        <a href="https://github.com/OWASP/www-project-internet-of-things" target="_blank" class="text-blue-400 text-sm hover:underline"><i class="fa-brands fa-github mr-1"></i> https://github.com/OWASP/www-project-internet-of-things</a>
+                    </div>
                 `
             },
             'vong-doi-botnet': {
@@ -249,176 +250,150 @@
                 category: "Phân tích hệ thống",
                 icon: "fa-solid fa-network-wired",
                 color: "from-red-400 to-rose-600",
-                excerpt: "Phân tích chi tiết chuỗi tấn công an toàn (Attack chain) của Botnet từ góc độ phòng thủ. Xác định rõ điều kiện khai thác và thiết lập môi trường Lab cô lập tuyệt đối.",
+                excerpt: "Giải thích vòng đời botnet IoT ở mức phòng thủ với 5 bước. Mô tả môi trường học tập có chủ đích IoTGoat và lập kế hoạch mô phỏng an toàn.",
                 content: `
-                    <h2>1. Phân tích chi tiết Vòng đời Botnet IoT (Góc độ phòng thủ)</h2>
-                    <p>Để xây dựng hệ thống phòng thủ vững chắc, chúng ta cần thấu hiểu tư duy và quy trình của kẻ tấn công. Botnet không lây nhiễm theo cách rải rác, mà hoạt động như một cỗ máy công nghiệp tự động hóa cao độ. Dưới đây là luồng hoạt động (Lifecycle) của một Botnet IoT điển hình (như Mirai hoặc Qbot) được mô phỏng để thiết lập các chốt chặn:</p>
+                    <h2>1. Sơ đồ Vòng đời Botnet IoT (Góc độ phòng thủ)</h2>
+                    <p>Botnet không lây nhiễm rải rác, mà hoạt động như một cỗ máy tự động hóa cao độ. Dưới đây là chuỗi tấn công (Attack Chain) điển hình với 5 bước đã được mô hình hóa để thiết lập các chốt chặn phòng thủ:</p>
 
-                    <!-- Sơ đồ CSS Flowchart -->
-                    <div class="flex flex-col lg:flex-row items-center justify-between bg-slate-800/50 p-6 rounded-2xl border border-slate-700 my-8 gap-4 shadow-xl">
-                        <div class="text-center p-5 bg-slate-900 rounded-xl border border-slate-700 flex-1 w-full relative group">
-                            <div class="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl blur opacity-0 group-hover:opacity-30 transition duration-500"></div>
-                            <div class="relative">
-                                <i class="fa-solid fa-satellite-dish text-3xl text-cyan-500 mb-3"></i>
-                                <h4 class="font-bold text-white text-base">1. Reconnaissance (Dò quét)</h4>
-                                <p class="text-xs text-slate-400 mt-2 leading-relaxed">Sử dụng kỹ thuật Stateless Scanning (như Zmap) gửi hàng loạt gói tin TCP SYN thăm dò IP ngẫu nhiên để tìm các thiết bị mở Port 23 (Telnet) hoặc 22 (SSH).</p>
-                            </div>
+                    <!-- Sơ đồ CSS Flowchart 5 bước -->
+                    <div class="flex flex-col lg:flex-row items-center justify-between bg-slate-800/50 p-4 rounded-2xl border border-slate-700 my-8 gap-3 shadow-xl overflow-x-auto">
+                        
+                        <!-- Bước 1 -->
+                        <div class="text-center p-4 bg-slate-900 rounded-xl border border-slate-700 flex-1 w-full lg:w-48 relative min-w-[160px]">
+                            <i class="fa-solid fa-satellite-dish text-2xl text-cyan-500 mb-2"></i>
+                            <h4 class="font-bold text-white text-sm">1. Tìm thiết bị yếu<br>(Recon)</h4>
+                            <p class="text-[10px] text-slate-400 mt-2">Dò quét diện rộng tìm các IP hở Port 23 (Telnet), Port 22 (SSH).</p>
                         </div>
                         
-                        <i class="fa-solid fa-arrow-right text-slate-500 hidden lg:block text-xl"></i>
-                        <i class="fa-solid fa-arrow-down text-slate-500 block lg:hidden text-xl"></i>
+                        <i class="fa-solid fa-arrow-right text-slate-500 hidden lg:block text-sm"></i>
+                        <i class="fa-solid fa-arrow-down text-slate-500 block lg:hidden text-sm"></i>
                         
-                        <div class="text-center p-5 bg-slate-900 rounded-xl border border-slate-700 flex-1 w-full relative group">
-                            <div class="absolute -inset-0.5 bg-gradient-to-r from-red-500 to-orange-500 rounded-xl blur opacity-0 group-hover:opacity-30 transition duration-500"></div>
-                            <div class="relative">
-                                <i class="fa-solid fa-unlock-keyhole text-3xl text-red-500 mb-3"></i>
-                                <h4 class="font-bold text-white text-base">2. Initial Access (Xâm nhập)</h4>
-                                <p class="text-xs text-slate-400 mt-2 leading-relaxed">Kích hoạt kịch bản Brute-force tự động. Mã độc sử dụng danh sách từ điển (Dictionary) chứa hơn 60 cặp User/Pass mặc định (admin/admin, root/xc3511...) để bẻ khóa.</p>
-                            </div>
+                        <!-- Bước 2 -->
+                        <div class="text-center p-4 bg-slate-900 rounded-xl border border-slate-700 flex-1 w-full lg:w-48 relative min-w-[160px]">
+                            <i class="fa-solid fa-unlock-keyhole text-2xl text-red-500 mb-2"></i>
+                            <h4 class="font-bold text-white text-sm">2. Chiếm quyền<br>(Access)</h4>
+                            <p class="text-[10px] text-slate-400 mt-2">Brute-force tự động bằng từ điển chứa mật khẩu mặc định (admin/admin).</p>
                         </div>
 
-                        <i class="fa-solid fa-arrow-right text-slate-500 hidden lg:block text-xl"></i>
-                        <i class="fa-solid fa-arrow-down text-slate-500 block lg:hidden text-xl"></i>
+                        <i class="fa-solid fa-arrow-right text-slate-500 hidden lg:block text-sm"></i>
+                        <i class="fa-solid fa-arrow-down text-slate-500 block lg:hidden text-sm"></i>
 
-                        <div class="text-center p-5 bg-slate-900 rounded-xl border border-slate-700 flex-1 w-full relative group">
-                            <div class="absolute -inset-0.5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl blur opacity-0 group-hover:opacity-30 transition duration-500"></div>
-                            <div class="relative">
-                                <i class="fa-solid fa-mask text-3xl text-purple-500 mb-3"></i>
-                                <h4 class="font-bold text-white text-base">3. Persistence (Duy trì lẩn trốn)</h4>
-                                <p class="text-xs text-slate-400 mt-2 leading-relaxed">Tải Payload nhị phân (tương thích kiến trúc ARM/MIPS) lên RAM (thư mục <code>/dev/tmp</code>), tự động xóa file gốc và <strong>đóng các cổng mạng</strong> để ngăn đối thủ khác giành quyền.</p>
-                            </div>
+                        <!-- Bước 3 -->
+                        <div class="text-center p-4 bg-slate-900 rounded-xl border border-slate-700 flex-1 w-full lg:w-48 relative min-w-[160px]">
+                            <i class="fa-solid fa-mask text-2xl text-purple-500 mb-2"></i>
+                            <h4 class="font-bold text-white text-sm">3. Duy trì<br>(Persistence)</h4>
+                            <p class="text-[10px] text-slate-400 mt-2">Tải mã độc lên RAM, xóa file gốc và đóng port để ngăn đối thủ khác cướp quyền.</p>
                         </div>
 
-                        <i class="fa-solid fa-arrow-right text-slate-500 hidden lg:block text-xl"></i>
-                        <i class="fa-solid fa-arrow-down text-slate-500 block lg:hidden text-xl"></i>
+                        <i class="fa-solid fa-arrow-right text-slate-500 hidden lg:block text-sm"></i>
+                        <i class="fa-solid fa-arrow-down text-slate-500 block lg:hidden text-sm"></i>
 
-                        <div class="text-center p-5 bg-slate-900 rounded-xl border border-slate-700 flex-1 w-full relative group">
-                            <div class="absolute -inset-0.5 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-xl blur opacity-0 group-hover:opacity-30 transition duration-500"></div>
-                            <div class="relative">
-                                <i class="fa-solid fa-tower-broadcast text-3xl text-yellow-500 mb-3"></i>
-                                <h4 class="font-bold text-white text-base">4. Attack (Nhận lệnh & Tấn công)</h4>
-                                <p class="text-xs text-slate-400 mt-2 leading-relaxed">Thiết bị "Zombie" kết nối bảo mật (thường qua IRC hoặc giao thức tùy chỉnh) về máy chủ Command & Control (C&C), chờ đợi mệnh lệnh xả bão DDoS (UDP/TCP Flood) vào mục tiêu.</p>
-                            </div>
+                        <!-- Bước 4 -->
+                        <div class="text-center p-4 bg-slate-900 rounded-xl border border-slate-700 flex-1 w-full lg:w-48 relative min-w-[160px]">
+                            <i class="fa-solid fa-tower-broadcast text-2xl text-yellow-500 mb-2"></i>
+                            <h4 class="font-bold text-white text-sm">4. Nhận lệnh<br>(C&C)</h4>
+                            <p class="text-[10px] text-slate-400 mt-2">Kết nối âm thầm về máy chủ Command & Control chờ chỉ thị.</p>
+                        </div>
+
+                        <i class="fa-solid fa-arrow-right text-slate-500 hidden lg:block text-sm"></i>
+                        <i class="fa-solid fa-arrow-down text-slate-500 block lg:hidden text-sm"></i>
+
+                        <!-- Bước 5 -->
+                        <div class="text-center p-4 bg-slate-900 rounded-xl border border-slate-700 flex-1 w-full lg:w-48 relative min-w-[160px]">
+                            <i class="fa-solid fa-burst text-2xl text-orange-500 mb-2"></i>
+                            <h4 class="font-bold text-white text-sm">5. Tấn công<br>(Attack)</h4>
+                            <p class="text-[10px] text-slate-400 mt-2">Đồng loạt xả bão DDoS (UDP/TCP Flood) vào mục tiêu được chỉ định.</p>
                         </div>
                     </div>
 
-                    <h2>2. Điều kiện khai thác & Môi trường Lab cô lập</h2>
-                    <p>Để hiểu rõ một lỗ hổng, ta cần chứng minh được tính khả thi của nó (Proof of Concept - PoC). Tuy nhiên, dựa trên yêu cầu khắt khe về việc <strong>tuân thủ an toàn mạng và giới hạn hợp pháp</strong>, mọi hoạt động mô phỏng phải được thực hiện trong môi trường vô trùng.</p>
+                    <h2>2. Điều kiện khai thác & Mô trường giả lập (IoTGoat)</h2>
+                    <p>Việc kiểm thử bảo mật trên thiết bị thật vi phạm đạo đức nghề nghiệp và pháp luật. Thay vào đó, đề tài sử dụng <strong>OWASP IoTGoat</strong> làm môi trường học tập có chủ đích. Đây là một Firmware (OpenWrt) được cấu hình cố tình chứa các lỗi: Telnet mở, mật khẩu yếu, backdoors...</p>
                     
-                    <h3>a. Điều kiện để một thiết bị bị khai thác (Attack Conditions):</h3>
-                    <p>Thiết bị IoT chỉ trở thành nạn nhân khi hội tụ đủ các yếu tố sau:</p>
-                    <ul class="space-y-2">
-                        <li><strong>Mạng (Network):</strong> Thiết bị sở hữu địa chỉ IP Public có thể truy cập trực tiếp từ Internet, hoặc nằm trong mạng LAN đã bị tổn thương (có máy tính khác bị nhiễm mã độc). Công nghệ NAT/UPnP trên Home Router thường vô tình phơi bày thiết bị ra ngoài.</li>
-                        <li><strong>Dịch vụ (Services):</strong> Các giao thức quản trị từ xa (Telnet, SSH, HTTP) đang ở trạng thái lắng nghe (Listening) và hệ thống không thiết lập cơ chế Rate Limiting (giới hạn số lần thử nghiệm mật khẩu).</li>
-                        <li><strong>Định danh (Credentials):</strong> Hệ điều hành cấu hình cấp quyền tối cao (Root/Admin) cho các tài khoản mặc định và không ép buộc người dùng thay đổi ở lần khởi động đầu tiên (Out-of-box experience).</li>
-                    </ul>
-
-                    <h3>b. Kế hoạch mô phỏng an toàn (Isolated Lab Environment):</h3>
-                    <p>Việc nghiên cứu tuyệt đối không bao gồm việc phát tán mã độc ra ngoài mạng Public. Nhóm đã triển khai một kiến trúc mạng <strong>Host-Only (Cô lập hoàn toàn)</strong> sử dụng nền tảng ảo hóa VMware Workstation / VirtualBox. Kiến trúc này tạo ra một mạng LAN ảo độc lập, ngắt kết nối hoàn toàn với Card mạng vật lý (NAT/Bridged) đi ra Internet.</p>
+                    <h3>Kế hoạch mô phỏng an toàn (Isolated Lab Environment):</h3>
+                    <p>Mô hình mạng được cô lập hoàn toàn (Host-Only Mode) trên VMware/VirtualBox. Không cấp quyền truy cập ra Internet (Drop Outbound) để chặn mọi rủi ro rò rỉ mã độc ra ngoài mạng thực.</p>
                     ${wrapCodeMacStyle(`
-# KIẾN TRÚC MẠNG MÔ PHỎNG AN TOÀN (SAFE LAB TOPOLOGY)
-# Subnet: 192.168.56.0/24 (Host-Only Mode)
-
-[ Máy ảo Tấn Công - Attacker ] 
-  (Kali Linux - 192.168.56.10)
-           |
-           |--> Các công cụ: Nmap, Hydra (Brute-force)
-           |
-           +-----------------+-----------------+
-                             |
-                  [ Mạng LAN Ảo (vSwitch) ]
-                             |
-           +-----------------+-----------------+
-           |                                   |
-[ Máy ảo Nạn Nhân - Victim ]         [ Máy ảo Giám Sát - Monitor ]
- (OWASP IoTGoat - 192.168.56.20)      (Security Onion / Wireshark)
- - Mở Port: 22 (SSH), 23 (Telnet)     - Chạy mode Promiscuous để 
- - Chạy Firmware chứa lỗ hổng         capture luồng pcap
+# MÔ HÌNH MẠNG CÔ LẬP HOÀN TOÀN (SAFE LAB)
+[ Kali Linux - 192.168.56.10 ] (Attacker / Firewall)
+      |
+      |--> (Mạng ảo vSwitch - 192.168.56.0/24)
+      |
+[ IoTGoat - 192.168.56.20 ] (Victim - Mở sẵn Port 23/22)
                     `, "Network Topology")}
-                    <p>Trong mô hình này, chúng tôi cấu hình Firewall (Iptables) trên máy Kali Linux để <strong>DROP</strong> toàn bộ gói tin đi ra các dải IP không thuộc mạng <code>192.168.56.0/24</code>, ngăn chặn triệt để rủi ro "bắn" nhầm payload ra hệ thống của trường học hay tổ chức bên ngoài. Wireshark được sử dụng để Capture và phân tích các luồng bắt tay TCP (3-way handshake) cũng như phân tích các bản tin dò mật khẩu, làm bằng chứng cho nguyên lý hoạt động.</p>
+
+                    <div class="mt-8 p-5 bg-slate-800/40 rounded-xl border border-slate-700/50">
+                        <h4 class="text-cyan-400 font-bold mb-2 text-sm uppercase tracking-wider"><i class="fa-solid fa-link mr-2"></i>Tài liệu tham khảo phần 2</h4>
+                        <p class="text-sm text-slate-400 mb-1">Môi trường thực hành, giả lập phân tích lỗ hổng IoT an toàn:</p>
+                        <a href="https://github.com/OWASP/IoTGoat" target="_blank" class="text-blue-400 text-sm hover:underline"><i class="fa-brands fa-github mr-1"></i> https://github.com/OWASP/IoTGoat</a>
+                    </div>
                 `
             },
             'phan-tich-nguyen-nhan': {
-                title: "3. Đánh giá Rủi ro & Phân Tích Nguyên Nhân",
+                title: "3. Đánh giá Rủi ro & Bảng phân tích Nguyên nhân",
                 category: "Đánh giá Rủi ro",
                 icon: "fa-solid fa-table-list",
                 color: "from-orange-400 to-yellow-500",
-                excerpt: "Nhận diện tài sản, mối đe dọa và đánh giá rủi ro an toàn thông tin theo chuẩn chuyên ngành. Trình bày chi tiết bảng ma trận nguyên nhân - hậu quả.",
+                excerpt: "Phân tích 4 yếu tố: tài sản, mối đe dọa, lỗ hổng, rủi ro. Trình bày chi tiết bảng ma trận nguyên nhân thiết bị bị chiếm quyền và biện pháp.",
                 content: `
-                    <h2>1. Phân tích mô hình Bảo mật (Tài sản - Mối đe dọa - Lỗ hổng - Rủi ro)</h2>
-                    <p>Trước khi đi sâu vào bảng nguyên nhân chi tiết, việc đánh giá sự cố thiết bị IoT cấu hình kém cần được hệ thống hóa qua 4 yếu tố cốt lõi của quản trị rủi ro an toàn thông tin:</p>
+                    <h2>1. Phân tích Đánh giá Bảo mật (Security Assessment)</h2>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
-                        <div class="bg-slate-800/40 p-6 rounded-xl border border-slate-700 hover:border-cyan-500/50 transition-colors">
-                            <div class="flex items-center gap-3 mb-3">
-                                <i class="fa-solid fa-gem text-cyan-400 text-xl"></i>
-                                <h3 class="text-white font-bold text-lg !mt-0 !mb-0">Tài sản (Assets)</h3>
-                            </div>
-                            <p class="text-sm text-slate-400 leading-relaxed">Không chỉ là bản thân phần cứng thiết bị, tài sản lớn nhất bị ảnh hưởng là <strong>băng thông mạng (Bandwidth)</strong>, uy tín của địa chỉ IP Public (IP Reputation), và dữ liệu riêng tư nhạy cảm của người dùng (hình ảnh camera, thói quen sinh hoạt).</p>
+                        <div class="bg-slate-800/40 p-5 rounded-xl border border-slate-700">
+                            <div class="flex items-center gap-3 mb-2"><i class="fa-solid fa-gem text-cyan-400"></i><strong class="text-white">Tài sản (Assets)</strong></div>
+                            <p class="text-sm text-slate-400">Băng thông mạng (Bandwidth), uy tín của địa chỉ IP Public (IP Reputation), dữ liệu riêng tư nhạy cảm của người dùng.</p>
                         </div>
                         
-                        <div class="bg-slate-800/40 p-6 rounded-xl border border-slate-700 hover:border-red-500/50 transition-colors">
-                            <div class="flex items-center gap-3 mb-3">
-                                <i class="fa-solid fa-skull-crossbones text-red-400 text-xl"></i>
-                                <h3 class="text-white font-bold text-lg !mt-0 !mb-0">Mối đe dọa (Threats)</h3>
-                            </div>
-                            <p class="text-sm text-slate-400 leading-relaxed">Các tổ chức tội phạm mạng (Cybercriminals), những người vận hành Botnet (Botnet Herders), và đáng sợ nhất là <strong>các kịch bản mã độc tự động (Automated Malware Worms)</strong> rà quét Internet 24/7 không biết mệt mỏi.</p>
+                        <div class="bg-slate-800/40 p-5 rounded-xl border border-slate-700">
+                            <div class="flex items-center gap-3 mb-2"><i class="fa-solid fa-skull-crossbones text-red-400"></i><strong class="text-white">Mối đe dọa (Threats)</strong></div>
+                            <p class="text-sm text-slate-400">Tổ chức tội phạm mạng, Botnet Herders, và đặc biệt là kịch bản rà quét tự động (Automated Worms) trên toàn Internet.</p>
                         </div>
 
-                        <div class="bg-slate-800/40 p-6 rounded-xl border border-slate-700 hover:border-yellow-500/50 transition-colors">
-                            <div class="flex items-center gap-3 mb-3">
-                                <i class="fa-solid fa-bug text-yellow-400 text-xl"></i>
-                                <h3 class="text-white font-bold text-lg !mt-0 !mb-0">Lỗ hổng (Vulnerabilities)</h3>
-                            </div>
-                            <p class="text-sm text-slate-400 leading-relaxed">Sự tắc trách trong thiết kế phần mềm của nhà sản xuất (OWASP IoT Top 10): Mật khẩu yếu mã hóa cứng (Hardcoded credentials), dịch vụ mạng công khai (Telnet mở), và thiếu cơ chế cập nhật firmware an toàn.</p>
+                        <div class="bg-slate-800/40 p-5 rounded-xl border border-slate-700">
+                            <div class="flex items-center gap-3 mb-2"><i class="fa-solid fa-bug text-yellow-400"></i><strong class="text-white">Lỗ hổng (Vulnerabilities)</strong></div>
+                            <p class="text-sm text-slate-400">Mật khẩu mặc định, mở Telnet công khai, Firmware cũ chứa 1-day/N-day, thiếu tính năng ghi log hệ thống.</p>
                         </div>
 
-                        <div class="bg-slate-800/40 p-6 rounded-xl border border-slate-700 hover:border-orange-500/50 transition-colors">
-                            <div class="flex items-center gap-3 mb-3">
-                                <i class="fa-solid fa-triangle-exclamation text-orange-400 text-xl"></i>
-                                <h3 class="text-white font-bold text-lg !mt-0 !mb-0">Rủi ro (Risks)</h3>
-                            </div>
-                            <p class="text-sm text-slate-400 leading-relaxed">Mất quyền kiểm soát thiết bị, bị lợi dụng làm bàn đạp (Pivot point) để tấn công sâu vào mạng LAN nội bộ, bị biến thành "Zombie" tham gia tấn công DDoS, hoặc IP bị đưa vào danh sách đen (Blacklist) của các ISP.</p>
+                        <div class="bg-slate-800/40 p-5 rounded-xl border border-slate-700">
+                            <div class="flex items-center gap-3 mb-2"><i class="fa-solid fa-triangle-exclamation text-orange-400"></i><strong class="text-white">Rủi ro (Risks)</strong></div>
+                            <p class="text-sm text-slate-400">Mất quyền kiểm soát thiết bị, bị lợi dụng làm bàn đạp (Pivot) tấn công LAN nội bộ, tham gia DDoS, IP bị Blacklist.</p>
                         </div>
                     </div>
 
-                    <h2>2. Bảng ma trận Nguyên nhân, Hậu quả và Biện pháp giảm thiểu</h2>
-                    <p>Dưới đây là bảng phân tích chi tiết tổng hợp cơ chế khai thác dựa trên cấu hình kém, từ đó hình thành tư duy phòng thủ đối xứng.</p>
+                    <h2>2. Bảng ma trận Nguyên nhân, Hậu quả và Biện pháp phòng chống</h2>
 
                     <div class="overflow-x-auto shadow-2xl rounded-xl border border-slate-700">
-                        <table class="custom-table !mt-0 !mb-0">
+                        <table class="custom-table !mt-0 !mb-0 text-sm">
                             <thead class="bg-slate-900 border-b border-slate-700">
                                 <tr>
-                                    <th class="w-1/4 uppercase text-xs tracking-wider text-cyan-400">Nguyên nhân <br>(Lỗ hổng / Cấu hình)</th>
+                                    <th class="w-1/4 uppercase text-xs tracking-wider text-cyan-400">Nguyên nhân <br>(Lỗ hổng)</th>
                                     <th class="w-1/4 uppercase text-xs tracking-wider text-cyan-400">Kịch bản khai thác <br>(Nguyên lý kỹ thuật)</th>
-                                    <th class="w-1/4 uppercase text-xs tracking-wider text-red-400">Hậu quả <br>(Tác động kinh doanh)</th>
+                                    <th class="w-1/4 uppercase text-xs tracking-wider text-red-400">Hậu quả <br>(Tác động)</th>
                                     <th class="w-1/4 uppercase text-xs tracking-wider text-green-400">Biện pháp phòng chống <br>(Hardening)</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-800">
                                 <tr>
-                                    <td class="font-medium text-white">1. Mật khẩu mặc định / Yếu<br><span class="text-xs text-slate-500 font-mono">(vd: admin:admin, root:12345)</span></td>
-                                    <td>Mã độc sử dụng tấn công từ điển (Dictionary Attack) tự động đăng nhập thông qua Telnet, SSH hoặc Web UI mà không gặp trở ngại nào.</td>
-                                    <td>Chiếm toàn quyền quản trị (Root) thiết bị chỉ trong chưa tới 3 giây. Cho phép kẻ tấn công sửa đổi cấu hình hệ thống.</td>
-                                    <td>Thiết kế quy trình <em>First-Boot</em>: Bắt buộc người dùng thay đổi mật khẩu phức tạp ở lần khởi động đầu tiên trước khi cấp quyền truy cập.</td>
+                                    <td class="font-medium text-white">1. Mật khẩu mặc định / Yếu</td>
+                                    <td>Mã độc sử dụng tấn công từ điển (Dictionary Attack) tự động dò bằng list tài khoản mặc định.</td>
+                                    <td>Chiếm toàn quyền quản trị (Root) thiết bị chỉ trong chưa tới 3 giây.</td>
+                                    <td>Ép buộc đổi thông tin đăng nhập (Credential) ở lần khởi động đầu tiên (First-Boot).</td>
                                 </tr>
                                 <tr>
-                                    <td class="font-medium text-white">2. Dịch vụ Telnet / Giao thức không mã hóa mở công khai</td>
-                                    <td>Thiết bị kết nối trực tiếp ra Internet qua NAT Router hoặc UPnP mà không có tường lửa. Giao thức Telnet truyền dữ liệu dưới dạng bản rõ (Plain-text).</td>
-                                    <td>Kẻ tấn công không chỉ rà quét được cổng mở, mà còn có thể dùng tấn công MitM (Sniffing) để đọc trộm thông tin đăng nhập truyền trên mạng.</td>
-                                    <td>Vô hiệu hóa hoàn toàn Telnet và FTP. Chuyển sang sử dụng SSH với xác thực bằng Public-Key (Key-based Auth) hoặc truy cập qua Web HTTPS (TLS 1.2+).</td>
+                                    <td class="font-medium text-white">2. Dịch vụ Telnet / SSH mở</td>
+                                    <td>Thiết bị kết nối Internet qua NAT/UPnP không tường lửa. Telnet truyền dữ liệu bản rõ dễ bị Sniff.</td>
+                                    <td>Bị quét dò port tự động, lộ lọt thông tin xác thực trên đường truyền.</td>
+                                    <td>Tắt dịch vụ Telnet. Chỉ dùng SSH (Key-based auth) hoặc Web HTTPS. Cấu hình Firewall (ACL).</td>
                                 </tr>
                                 <tr>
-                                    <td class="font-medium text-white">3. Firmware cũ, chứa lỗ hổng đã biết (1-day, N-day)</td>
-                                    <td>Tin tặc gửi một gói tin HTTP Request chứa mã độc được chế tác sẵn (craft payload) khai thác lỗi Command Injection hoặc Buffer Overflow trên Web Server (vd: Boa, lighttpd).</td>
-                                    <td>Thực thi mã từ xa (RCE) thành công. Kẻ tấn công cấy mã độc vào thẳng hệ thống mà hoàn toàn không cần biết tên đăng nhập hay mật khẩu.</td>
-                                    <td>Triển khai cơ chế Auto-update. Người dùng cần chủ động kiểm tra bản vá bảo mật. Đảm bảo firmware mới phải có Chữ ký số (Digital Signature).</td>
+                                    <td class="font-medium text-white">3. Firmware cũ / Thiếu update</td>
+                                    <td>Gửi gói tin chứa mã độc (craft payload) khai thác lỗi Command Injection/Buffer Overflow đã biết.</td>
+                                    <td>Thực thi mã từ xa (RCE). Bị cấy mã độc mà không cần dò tìm mật khẩu.</td>
+                                    <td>Triển khai Auto-update. Kiểm tra bản vá thường xuyên. Firmware phải có chữ ký số.</td>
                                 </tr>
                                 <tr>
-                                    <td class="font-medium text-white">4. Không có cơ chế Logging / Giám sát bất thường</td>
-                                    <td>Thiết bị bị tấn công Brute-force hàng ngàn lần một phút nhưng hệ thống không ghi log hoặc không có tính năng khóa IP tạm thời.</td>
-                                    <td>Kẻ tấn công có tài nguyên và thời gian vô hạn để thử nghiệm. Khi sự cố xảy ra, chuyên gia không có dấu vết (Forensics data) để điều tra.</td>
-                                    <td>Đẩy log hệ thống (Syslog) định kỳ ra một máy chủ SIEM bên ngoài. Tích hợp các module như Fail2Ban để tự động ban IP sau 5 lần đăng nhập sai.</td>
+                                    <td class="font-medium text-white">4. Không Log / Giám sát bất thường</td>
+                                    <td>Bị Brute-force hàng ngàn lần/phút nhưng hệ thống không có tính năng khóa IP (Rate limiting).</td>
+                                    <td>Kẻ tấn công có thời gian vô hạn để thử nghiệm. Không có dấu vết điều tra (Forensics).</td>
+                                    <td>Đẩy Syslog ra máy chủ SIEM. Dùng Fail2Ban tự động chặn IP sau 5 lần sai.</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -426,111 +401,79 @@
                 `
             },
             'checklist-hardening': {
-                title: "4. Checklist Hardening Thiết bị & Kết luận",
+                title: "4. Checklist Hardening, Bài học & Kết luận",
                 category: "Giải pháp",
                 icon: "fa-solid fa-list-check",
                 color: "from-emerald-400 to-green-600",
-                excerpt: "Trình bày danh sách kiểm tra (Checklist) tăng cường bảo mật có tính ứng dụng cao. Tổng kết đúc rút 3 bài học kinh nghiệm sâu sắc, 2 hạn chế và tài liệu tham khảo.",
+                excerpt: "Đề xuất checklist hardening thực tế (Dựa trên OWASP ISVS). Tổng kết đúc rút 3 bài học kinh nghiệm sâu sắc, 2 hạn chế của bài làm.",
                 content: `
-                    <h2>1. Checklist Hardening (Tăng cường bảo mật) Thiết bị IoT</h2>
-                    <p>Dựa trên bộ tiêu chuẩn <strong>OWASP ISVS (IoT Security Verification Standard)</strong>, để bẻ gãy vòng đời của Botnet, quản trị viên mạng và người dùng cuối cần áp dụng nghiêm ngặt danh sách kiểm tra an toàn sau đây. Việc thực hiện hardening không chỉ là một hành động đơn lẻ, mà là một quy trình bảo mật theo chiều sâu (Defense in Depth).</p>
+                    <h2>1. Checklist Hardening Thiết bị IoT</h2>
+                    <p>Dựa trên bộ tiêu chuẩn an toàn phần mềm thiết bị <strong>OWASP ISVS</strong>, dưới đây là danh sách kiểm tra (Checklist) bắt buộc để phòng chống Botnet:</p>
 
                     <div class="bg-slate-800/40 p-6 rounded-xl border border-slate-700 my-6 shadow-lg">
-                        <ul class="space-y-6 !list-none !pl-0 text-slate-300">
+                        <ul class="space-y-5 !list-none !pl-0 text-slate-300">
                             <li class="flex items-start gap-4 !pl-0 !mb-0">
-                                <div class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0 mt-1 border border-green-500/50">
-                                    <i class="fa-solid fa-check text-green-400"></i>
-                                </div>
+                                <i class="fa-solid fa-square-check text-green-400 text-xl mt-1"></i>
                                 <div>
-                                    <strong class="text-white text-lg block mb-1">Cấp độ 1: Quản lý Định danh & Quyền truy cập (Identity Management)</strong>
-                                    <p class="text-sm leading-relaxed mb-2">Vô hiệu hóa toàn bộ các tài khoản ẩn (Backdoor, Support, Debug) do nhà sản xuất cài đặt. Thay đổi mật khẩu mặc định thành mật khẩu có độ dài tối thiểu 12 ký tự, kết hợp chữ, số và ký tự đặc biệt. Tắt tính năng khôi phục mật khẩu qua giao diện mạng nếu không cần thiết.</p>
+                                    <strong class="text-white block mb-1">Đổi Credential & Quản lý định danh</strong>
+                                    <p class="text-sm">Vô hiệu hóa tài khoản ẩn/debug (Backdoor). Thay đổi mật khẩu mặc định thành mật khẩu mạnh (>12 ký tự).</p>
                                 </div>
                             </li>
                             <li class="flex items-start gap-4 !pl-0 !mb-0">
-                                <div class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0 mt-1 border border-green-500/50">
-                                    <i class="fa-solid fa-check text-green-400"></i>
-                                </div>
+                                <i class="fa-solid fa-square-check text-green-400 text-xl mt-1"></i>
                                 <div>
-                                    <strong class="text-white text-lg block mb-1">Cấp độ 2: Tối giản hóa Dịch vụ Mạng (Network Service Reduction)</strong>
-                                    <p class="text-sm leading-relaxed mb-2">Đóng chặt tất cả các Port không sử dụng. Tuyệt đối không để hở Port 23 (Telnet), Port 21 (FTP) ra môi trường public. Chỉ cho phép quản trị thiết bị thông qua các kênh mã hóa mạnh như HTTPS hoặc SSH. Nếu có thể, hãy đổi Port mặc định của SSH (từ 22 sang một cổng cao, ví dụ 22022) để giảm thiểu nỗ lực rà quét tự động.</p>
-                                    ${wrapCodeMacStyle(`
-# Ví dụ Bash Script tối ưu để tắt và khóa dịch vụ Telnet trên hệ điều hành nhúng
-systemctl disable telnet.socket
-systemctl stop telnet.socket
-iptables -A INPUT -p tcp --dport 23 -j DROP
-                                    `, "Bash / Iptables")}
+                                    <strong class="text-white block mb-1">Tắt Dịch vụ Mạng không cần thiết (Telnet/UPnP)</strong>
+                                    <p class="text-sm">Tuyệt đối không hở Port 23, 21 ra Internet. Tắt UPnP trên Router. Chỉ dùng SSH (đổi sang port cao như 22022) hoặc HTTPS.</p>
                                 </div>
                             </li>
                             <li class="flex items-start gap-4 !pl-0 !mb-0">
-                                <div class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0 mt-1 border border-green-500/50">
-                                    <i class="fa-solid fa-check text-green-400"></i>
-                                </div>
+                                <i class="fa-solid fa-square-check text-green-400 text-xl mt-1"></i>
                                 <div>
-                                    <strong class="text-white text-lg block mb-1">Cấp độ 3: Cách ly mạng (Micro-segmentation & Firewall)</strong>
-                                    <p class="text-sm leading-relaxed mb-2">Áp dụng kiến trúc Zero-Trust. Thiết bị IoT (Smart TV, Camera) không được phép nằm chung một lớp mạng (Subnet) với các máy tính lưu trữ dữ liệu công việc quan trọng. Tạo một VLAN riêng (IoT Network) trên Router. Cấu hình Access Control List (ACL) để chặn vùng IoT chủ động khởi tạo kết nối (Outbound) tới vùng LAN nội bộ, và giám sát chặt chẽ lưu lượng đi ra ngoài Internet để phát hiện hành vi kết nối đến máy chủ C&C.</p>
+                                    <strong class="text-white block mb-1">Cập nhật Firmware An toàn</strong>
+                                    <p class="text-sm">Kiểm tra bản vá từ nhà sản xuất. Nếu thiết bị đã EoL (End-of-Life), xem xét cô lập khỏi Internet.</p>
                                 </div>
                             </li>
                             <li class="flex items-start gap-4 !pl-0 !mb-0">
-                                <div class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0 mt-1 border border-green-500/50">
-                                    <i class="fa-solid fa-check text-green-400"></i>
-                                </div>
+                                <i class="fa-solid fa-square-check text-green-400 text-xl mt-1"></i>
                                 <div>
-                                    <strong class="text-white text-lg block mb-1">Cấp độ 4: Duy trì Vòng đời phần mềm (Patch Management)</strong>
-                                    <p class="text-sm leading-relaxed mb-2">Thường xuyên kiểm tra bản cập nhật firmware từ trang chủ nhà sản xuất. Đối với các thiết bị đã bị "Bỏ rơi" (End-of-Life / EoL) không còn được vá lỗi bảo mật, cần có kế hoạch thay thế hoặc thực hiện cô lập chúng hoàn toàn khỏi mạng Internet (Air-gapping).</p>
+                                    <strong class="text-white block mb-1">Cấu hình Tường lửa (Firewall) & Phân đoạn mạng</strong>
+                                    <p class="text-sm">Đưa IoT vào VLAN riêng (Micro-segmentation). Chặn IoT khởi tạo kết nối (Outbound) tới LAN nội bộ và giám sát chặt kết nối lạ.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-4 !pl-0 !mb-0">
+                                <i class="fa-solid fa-square-check text-green-400 text-xl mt-1"></i>
+                                <div>
+                                    <strong class="text-white block mb-1">Giám sát hoạt động bất thường (Anomaly Detection)</strong>
+                                    <p class="text-sm">Cấu hình giới hạn đăng nhập (Rate limiting). Cảnh báo khi lưu lượng mạng gửi đi tăng vọt đột biến (Dấu hiệu đang bị lợi dụng DDoS).</p>
                                 </div>
                             </li>
                         </ul>
                     </div>
 
-                    <h2 class="text-yellow-400 border-b-yellow-400/30 border-b pb-3 mt-10"><i class="fa-solid fa-flag-checkered mr-3"></i> Kết luận Đề tài</h2>
+                    <div class="mt-8 p-5 bg-slate-800/40 rounded-xl border border-slate-700/50">
+                        <h4 class="text-cyan-400 font-bold mb-2 text-sm uppercase tracking-wider"><i class="fa-solid fa-link mr-2"></i>Tài liệu tham khảo phần Giải pháp</h4>
+                        <p class="text-sm text-slate-400 mb-1">Checklist được xây dựng dựa trên Tiêu chuẩn Xác minh Bảo mật IoT (ISVS) của OWASP:</p>
+                        <a href="https://github.com/OWASP/IoT-Security-Verification-Standard-ISVS" target="_blank" class="text-blue-400 text-sm hover:underline"><i class="fa-brands fa-github mr-1"></i> https://github.com/OWASP/IoT-Security-Verification-Standard-ISVS</a>
+                    </div>
+
+                    <h2 class="text-yellow-400 border-b-yellow-400/30 border-b pb-3 mt-12"><i class="fa-solid fa-flag-checkered mr-3"></i> Kết luận Đề tài</h2>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
                         <div>
                             <h3 class="text-cyan-400 font-bold mb-4 !mt-0 text-xl"><i class="fa-solid fa-lightbulb mr-2"></i> 3 Điều học được</h3>
                             <ul class="space-y-3 text-slate-300 text-sm">
-                                <li class="flex items-start gap-2"><i class="fa-solid fa-circle-notch text-cyan-500 mt-1 text-[10px]"></i> <span><strong>Bản chất của các cuộc tấn công không phải lúc nào cũng tinh vi:</strong> Sự sụp đổ của hàng triệu thiết bị không đến từ các kỹ thuật Zero-day phức tạp tốn kém, mà chủ yếu bắt nguồn từ sự cẩu thả trong cấu hình cơ bản (mật khẩu mặc định, mở Port vô tội vạ). Phòng thủ tốt bắt đầu từ những điều cơ bản nhất (Security Basics).</span></li>
-                                <li class="flex items-start gap-2"><i class="fa-solid fa-circle-notch text-cyan-500 mt-1 text-[10px]"></i> <span><strong>Tư duy Zero-Trust là bắt buộc:</strong> Không thể và không nên tin tưởng tuyệt đối bất kỳ thiết bị thông minh nào trong mạng. Kỹ thuật phân đoạn mạng (Micro-segmentation) là phao cứu sinh cuối cùng khi một thiết bị bị thỏa hiệp.</span></li>
-                                <li class="flex items-start gap-2"><i class="fa-solid fa-circle-notch text-cyan-500 mt-1 text-[10px]"></i> <span><strong>Tuân thủ Đạo đức Nghề nghiệp (Ethical Hacking):</strong> Nhận thức được tầm quan trọng của việc nghiên cứu an toàn. Sử dụng các dự án giả lập cô lập như IoTGoat cho phép phân tích rủi ro chuyên sâu mà tuyệt đối không vi phạm pháp luật hay gây nguy hại cho hệ thống mạng công cộng.</span></li>
+                                <li class="flex items-start gap-2"><i class="fa-solid fa-circle-notch text-cyan-500 mt-1 text-[10px]"></i> <span><strong>Phòng thủ phải bắt đầu từ cơ bản:</strong> Botnet bùng nổ không nhờ kỹ thuật cao siêu (Zero-day), mà qua việc khai thác mật khẩu mặc định. Sửa lỗi cơ bản giải quyết được 90% vấn đề.</span></li>
+                                <li class="flex items-start gap-2"><i class="fa-solid fa-circle-notch text-cyan-500 mt-1 text-[10px]"></i> <span><strong>Sức mạnh của Micro-segmentation:</strong> Không thể tin tưởng thiết bị IoT (Zero-Trust). Việc chia VLAN và cấu hình Firewall cấm Outbound là phao cứu sinh cuối cùng.</span></li>
+                                <li class="flex items-start gap-2"><i class="fa-solid fa-circle-notch text-cyan-500 mt-1 text-[10px]"></i> <span><strong>Quy tắc An toàn / Đạo đức:</strong> Tuyệt đối không mô phỏng/quét mã độc ra hệ thống mạng trường học hay mạng công cộng. Bắt buộc dùng mạng Host-Only (như IoTGoat) để nghiên cứu tĩnh.</span></li>
                             </ul>
                         </div>
                         <div>
-                            <h3 class="text-red-400 font-bold mb-4 !mt-0 text-xl"><i class="fa-solid fa-triangle-exclamation mr-2"></i> 2 Hạn chế của báo cáo</h3>
+                            <h3 class="text-red-400 font-bold mb-4 !mt-0 text-xl"><i class="fa-solid fa-triangle-exclamation mr-2"></i> 2 Hạn chế của bài làm</h3>
                             <ul class="space-y-3 text-slate-300 text-sm">
-                                <li class="flex items-start gap-2"><i class="fa-solid fa-xmark text-red-500 mt-1 text-[12px]"></i> <span><strong>Giới hạn về mô phỏng phần cứng vật lý:</strong> Do thực hiện trên môi trường máy ảo kiến trúc x86 (VirtualBox), báo cáo chưa có điều kiện thực hành các kỹ thuật tấn công/phòng thủ giao tiếp phần cứng thực tế (Hardware Hacking) như trích xuất firmware qua cổng UART/JTAG hay dump chip nhớ (EEPROM/SPI Flash) trên bo mạch ARM/MIPS.</span></li>
-                                <li class="flex items-start gap-2"><i class="fa-solid fa-xmark text-red-500 mt-1 text-[12px]"></i> <span><strong>Phạm vi kiểm thử tĩnh:</strong> Bài tiểu luận mới chỉ dừng ở mức kiểm tra các dịch vụ mạng (Network Layer) và cấu hình tĩnh. Chưa đi sâu vào việc dịch ngược (Reverse Engineering) file thực thi mã độc Botnet để phân tích thuật toán tạo miền DGA (Domain Generation Algorithm) hay các kỹ thuật làm rối mã (Obfuscation).</span></li>
+                                <li class="flex items-start gap-2"><i class="fa-solid fa-xmark text-red-500 mt-1 text-[12px]"></i> <span><strong>Chưa thực hành Hardware Hacking:</strong> Đề tài mới mô phỏng môi trường mạng (Network/OS). Chưa có điều kiện thực hành trích xuất firmware thực tế (Dump EEPROM/UART) trên bo mạch vật lý.</span></li>
+                                <li class="flex items-start gap-2"><i class="fa-solid fa-xmark text-red-500 mt-1 text-[12px]"></i> <span><strong>Thiếu phân tích mã tĩnh nâng cao:</strong> Bài làm dừng ở mức phân tích hành vi và cấu hình phòng thủ. Chưa dịch ngược (Reverse Engineering) mã độc gốc của Mirai để xem thuật toán làm rối (Obfuscation).</span></li>
                             </ul>
                         </div>
-                    </div>
-
-                    <!-- Nguồn tài liệu tham khảo theo yêu cầu bắt buộc -->
-                    <div class="mt-12 bg-darker p-8 rounded-2xl border border-slate-700/50">
-                        <h2 class="text-xl font-bold text-white mb-6 !mt-0 flex items-center"><i class="fa-solid fa-book-bookmark text-cyan-500 mr-3"></i> Danh mục Tài liệu Tham khảo</h2>
-                        <ul class="space-y-4 text-sm text-slate-400 !pl-0 !list-none">
-                            <li class="flex items-start transition-colors hover:text-white">
-                                <i class="fa-brands fa-github text-xl mr-3 text-slate-500"></i> 
-                                <div>
-                                    <strong class="text-cyan-400 block mb-1">OWASP IoT Project</strong>
-                                    Dự án cung cấp kiến thức nền tảng và danh sách top 10 lỗ hổng nghiêm trọng nhất của thiết bị vạn vật kết nối.<br>
-                                    <a href="https://github.com/OWASP/www-project-internet-of-things" target="_blank" class="text-blue-400 hover:underline">https://github.com/OWASP/www-project-internet-of-things</a>
-                                </div>
-                            </li>
-                            <li class="flex items-start transition-colors hover:text-white">
-                                <i class="fa-brands fa-github text-xl mr-3 text-slate-500"></i> 
-                                <div>
-                                    <strong class="text-cyan-400 block mb-1">OWASP IoTGoat</strong>
-                                    Firmware hệ điều hành OpenWrt được cố tình tạo ra các lỗ hổng bảo mật, đóng vai trò là môi trường thực hành tấn công/phòng thủ an toàn.<br>
-                                    <a href="https://github.com/OWASP/IoTGoat" target="_blank" class="text-blue-400 hover:underline">https://github.com/OWASP/IoTGoat</a>
-                                </div>
-                            </li>
-                            <li class="flex items-start transition-colors hover:text-white">
-                                <i class="fa-brands fa-github text-xl mr-3 text-slate-500"></i> 
-                                <div>
-                                    <strong class="text-cyan-400 block mb-1">OWASP ISVS (IoT Security Verification Standard)</strong>
-                                    Khung tiêu chuẩn xác minh bảo mật IoT, cung cấp các checklist và yêu cầu kiểm thử để tăng cường độ an toàn phần mềm thiết bị.<br>
-                                    <a href="https://github.com/OWASP/IoT-Security-Verification-Standard-ISVS" target="_blank" class="text-blue-400 hover:underline">https://github.com/OWASP/IoT-Security-Verification-Standard-ISVS</a>
-                                </div>
-                            </li>
-                        </ul>
                     </div>
                 `
             }
