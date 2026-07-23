@@ -1,0 +1,31 @@
+==============================================================================
+
+BỘ LUẬT PHÁT HIỆN XÂM NHẬP (SNORT/SURICATA IDS RULES) - BLUE TEAM
+Mục đích: Bắt các dấu hiệu (Signatures) của Botnet Mirai trên môi trường mạng thực
+
+==============================================================================
+
+1. PHÁT HIỆN HÀNH VI QUÉT PORT 23 HÀNG LOẠT (SCANNING)
+
+Bắt các gói tin TCP SYN nhắm vào Port 23 từ một IP nội bộ với tần suất cao (10 kết nối / 5 giây)
+
+alert tcp $HOME_NET any -> any 23 (msg:"[CẢNH BÁO IOT] Phat hien thiet bi noi bo quet Port Telnet (Hanh vi Botnet Mirai)"; flags:S; threshold:type both, track by_src, count 10, seconds 5; sid:1000001; rev:1;)
+
+2. PHÁT HIỆN HÀNH VI DÒ MẬT KHẨU MẶC ĐỊNH (BRUTE-FORCE INFECTION)
+
+Bắt các luồng dữ liệu Telnet chứa mật khẩu mặc định khét tiếng của mã độc Mirai
+
+alert tcp any any -> $HOME_NET 23 (msg:"[CẢNH BÁO ĐỎ] Phat hien dang nhap Telnet bang mat khau Mirai (root/xc3511)"; flow:established,to_server; content:"xc3511"; nocase; sid:1000002; rev:1;)
+alert tcp any any -> $HOME_NET 23 (msg:"[CẢNH BÁO ĐỎ] Phat hien dang nhap Telnet bang mat khau mac dinh (admin/admin)"; flow:established,to_server; content:"admin"; nocase; sid:1000003; rev:1;)
+
+3. PHÁT HIỆN HÀNH VI TẤN CÔNG DDOS (UDP FLOOD OUTBOUND)
+
+Bắt lưu lượng UDP bất thường gửi từ mạng nội bộ ra Internet (500 gói / 2 giây)
+
+alert udp $HOME_NET any ->$EXTERNAL_NET any (msg:"[CẢNH BÁO DDOS] Thiet bi IoT dang ban luu luong UDP Flood ra Internet"; threshold:type both, track by_src, count 500, seconds 2; sid:1000004; rev:1;)
+
+4. PHÁT HIỆN KẾT NỐI VỀ MÁY CHỦ CHỈ HUY (C&C COMMUNICATION)
+
+(Giả định IP của C&C Server là một danh sách đen đã biết)
+
+alert tcp $HOME_NET any -> [192.168.1.100, 10.10.10.99] any (msg:"[CẢNH BÁO C&C] Phat hien thiet bi IoT ket noi ve may chu dieu khien Botnet"; flow:established,to_server; sid:1000005; rev:1;)
