@@ -1,0 +1,42 @@
+ ==============================================================================
+! FILE CẤU HÌNH TƯỜNG LỬA (CISCO ACL) BẢO VỆ MẠNG IOT
+! ==============================================================================
+
+! BỐI CẢNH (CONTEXT):
+! Giả định hệ thống mạng của doanh nghiệp được chia làm 2 khu vực:
+! - VLAN 10 (192.168.10.0/24): Mạng máy tính nhân viên (Đáng tin cậy)
+! - VLAN 20 (192.168.20.0/24): Mạng chứa thiết bị IoT như Camera (Kém tin cậy)
+
+! NGUYÊN TẮC BẢO MẬT: Zero Trust & Micro-segmentation
+
+! 1. Ngăn chặn sự lây lan nội bộ:
+! Tuyệt đối không cho phép thiết bị IoT tự ý khởi tạo kết nối sang mạng Nhân viên
+access-list 100 deny ip 192.168.20.0 0.0.0.255 192.168.10.0 0.0.0.255
+
+! 2. KHÓA CỔNG QUẢN TRỊ OUTBOUND (Chống Botnet Mirai):
+! Cấm thiết bị IoT gửi yêu cầu kết nối Port 23 (Telnet) và Port 22 (SSH) ra ngoài Internet.
+! (Ngay cả khi IP Camera bị nhiễm mã độc, nó cũng bị mù, không thể đi quét mạng nhà người khác)
+access-list 100 deny tcp 192.168.20.0 0.0.0.255 any eq 23
+access-list 100 deny tcp 192.168.20.0 0.0.0.255 any eq 22
+
+! 3. Chặn mã độc gửi thư rác hoặc thực hiện DDoS bằng UDP Flood:
+! Giới hạn chỉ cho thiết bị IoT gửi gói tin UDP ra ngoài cho dịch vụ DNS (Port 53) và NTP (Port 123)
+access-list 100 permit udp 192.168.20.0 0.0.0.255 any eq 53
+access-list 100 permit udp 192.168.20.0 0.0.0.255 any eq 123
+access-list 100 deny udp 192.168.20.0 0.0.0.255 any
+
+! 4. Mở đường cho luồng truy cập hợp lệ còn lại:
+! (Ví dụ: Cho phép Camera đẩy hình ảnh lên Cloud qua cổng Web HTTP/HTTPS)
+access-list 100 permit tcp 192.168.20.0 0.0.0.255 any eq 443
+access-list 100 permit tcp 192.168.20.0 0.0.0.255 any eq 80
+
+! 5. Chặn mọi thứ khác không nằm trong danh sách cho phép (Default Deny)
+access-list 100 deny ip 192.168.20.0 0.0.0.255 any
+
+! ==============================================================================
+! CÁCH ÁP DỤNG TRONG CISCO PACKET TRACER:
+! Nạp rule này vào cổng Gateway của VLAN 20 theo chiều đi vào (in) router:
+!
+! Router(config)# interface GigabitEthernet0/0.20
+! Router(config-subif)# ip access-group 100 in
+! ==============================================================================
