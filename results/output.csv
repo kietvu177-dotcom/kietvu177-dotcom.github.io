@@ -1,0 +1,8 @@
+IP_Address,Device_Type,Default_Username,Default_Password,Infection_Time,Bot_Status
+192.168.20.15,IP_Camera_Dahua,admin,admin,2026-07-23 12:00:45,Active_Zombie
+192.168.20.16,Smart_Bulb_Xiaomi,root,12345,2026-07-23 12:00:46,Active_Zombie
+192.168.20.18,IP_Camera_Hik,root,xc3511,2026-07-23 12:00:47,Active_Zombie
+192.168.20.19,Smart_Fridge_SS,guest,guest,2026-07-23 12:00:47,Active_Zombie
+192.168.20.20,Smart_TV_Sony,admin,admin,2026-07-23 12:00:48,Active_Zombie
+192.168.20.22,IP_Camera_Axis,root,12345,2026-07-23 12:00:49,Active_Zombie
+192.168.20.24,DVR_Recorder,root,xc3511,2026-07-23 12:00:50,Active_Zombie
