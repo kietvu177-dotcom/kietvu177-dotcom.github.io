@@ -1,0 +1,19 @@
+{
+"botnet_configuration": {
+"cc_server_ip": "127.0.0.1",
+"cc_server_port": 8888,
+"encryption_key": "mirai_sim_secret_key_2026",
+"heartbeat_interval_seconds": 60
+},
+"attack_vectors_supported": [
+"UDP_FLOOD",
+"TCP_SYN_FLOOD",
+"HTTP_GET_FLOOD",
+"GRE_FLOOD"
+],
+"scanner_settings": {
+"max_threads": 50,
+"timeout_ms": 1000,
+"target_ports": [22, 23, 80, 8080, 5555]
+}
+}
