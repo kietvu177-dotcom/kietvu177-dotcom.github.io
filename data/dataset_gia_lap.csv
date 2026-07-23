@@ -1,0 +1,11 @@
+IP_Address,Device_Type,Firmware_Version,Default_Username,Default_Password,Status
+192.168.20.15,IP_Camera_Dahua,v1.0.2,admin,admin,Vulnerable
+192.168.20.16,Smart_Bulb_Xiaomi,v2.1.0,root,12345,Vulnerable
+192.168.20.17,Home_Router_TP,v1.5.0,admin,password_changed,Secured
+192.168.20.18,IP_Camera_Hik,v1.0.0,root,xc3511,Vulnerable
+192.168.20.19,Smart_Fridge_SS,v3.2.1,guest,guest,Vulnerable
+192.168.20.20,Smart_TV_Sony,v4.1.0,admin,admin,Vulnerable
+192.168.20.21,IoT_Gateway_Hub,v2.0.0,root,ComplexP@ss!,Secured
+192.168.20.22,IP_Camera_Axis,v1.1.1,root,12345,Vulnerable
+192.168.20.23,Smart_Speaker_Echo,v5.0,admin,1234,Secured
+192.168.20.24,DVR_Recorder,v1.0.0,root,xc3511,Vulnerable
