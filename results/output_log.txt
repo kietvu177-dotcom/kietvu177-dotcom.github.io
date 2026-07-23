@@ -1,0 +1,90 @@
+============================================================
+        IoT BOTNET SIMULATOR - RED TEAM DEMO SCRIPT         
+============================================================
+
+[+] BƯỚC 1: TẢI DANH SÁCH THIẾT BỊ IOT MỤC TIÊU...
+    -> Đã tải thành công 10 thiết bị từ mạng giả lập.
+
+[+] BƯỚC 2: RÀ QUÉT & BRUTE-FORCE MẬT KHẨU MẶC ĐỊNH (MÔ PHỎNG)...
+    [*] Đang kiểm tra Port 23 (Telnet) tại 192.168.20.15 [IP_Camera_Dahua]...
+        -> [BÁO ĐỘNG] Chiếm quyền THÀNH CÔNG! Đã rà trúng mật khẩu: admin:admin
+    [*] Đang kiểm tra Port 23 (Telnet) tại 192.168.20.16 [Smart_Bulb_Xiaomi]...
+        -> [BÁO ĐỘNG] Chiếm quyền THÀNH CÔNG! Đã rà trúng mật khẩu: root:12345
+    [*] Đang kiểm tra Port 23 (Telnet) tại 192.168.20.17 [Home_Router_TP]...
+        -> [V] Thiết bị an toàn. Đã chặn kết nối Telnet hoặc Đổi mật khẩu mạnh.
+    [*] Đang kiểm tra Port 23 (Telnet) tại 192.168.20.18 [IP_Camera_Hik]...
+        -> [BÁO ĐỘNG] Chiếm quyền THÀNH CÔNG! Đã rà trúng mật khẩu: root:xc3511
+    [*] Đang kiểm tra Port 23 (Telnet) tại 192.168.20.19 [Smart_Fridge_SS]...
+        -> [BÁO ĐỘNG] Chiếm quyền THÀNH CÔNG! Đã rà trúng mật khẩu: guest:guest
+    [*] Đang kiểm tra Port 23 (Telnet) tại 192.168.20.20 [Smart_TV_Sony]...
+        -> [BÁO ĐỘNG] Chiếm quyền THÀNH CÔNG! Đã rà trúng mật khẩu: admin:admin
+    [*] Đang kiểm tra Port 23 (Telnet) tại 192.168.20.21 [IoT_Gateway_Hub]...
+        -> [V] Thiết bị an toàn. Đã chặn kết nối Telnet hoặc Đổi mật khẩu mạnh.
+    [*] Đang kiểm tra Port 23 (Telnet) tại 192.168.20.22 [IP_Camera_Axis]...
+        -> [BÁO ĐỘNG] Chiếm quyền THÀNH CÔNG! Đã rà trúng mật khẩu: root:12345
+    [*] Đang kiểm tra Port 23 (Telnet) tại 192.168.20.23 [Smart_Speaker_Echo]...
+        -> [V] Thiết bị an toàn. Đã chặn kết nối Telnet hoặc Đổi mật khẩu mạnh.
+    [*] Đang kiểm tra Port 23 (Telnet) tại 192.168.20.24 [DVR_Recorder]...
+        -> [BÁO ĐỘNG] Chiếm quyền THÀNH CÔNG! Đã rà trúng mật khẩu: root:xc3511
+
+[+] BƯỚC 3: THIẾT LẬP KẾT NỐI VỀ C&C SERVER...
+    [C&C] Đã nhận tín hiệu báo danh từ Zombie: 192.168.20.15
+          Payload mẫu nhận được: Action=register_to_cc_server
+    [C&C] Đã nhận tín hiệu báo danh từ Zombie: 192.168.20.16
+          Payload mẫu nhận được: Action=register_to_cc_server
+    [C&C] Đã nhận tín hiệu báo danh từ Zombie: 192.168.20.18
+          Payload mẫu nhận được: Action=register_to_cc_server
+    [C&C] Đã nhận tín hiệu báo danh từ Zombie: 192.168.20.19
+          Payload mẫu nhận được: Action=register_to_cc_server
+    [C&C] Đã nhận tín hiệu báo danh từ Zombie: 192.168.20.20
+          Payload mẫu nhận được: Action=register_to_cc_server
+    [C&C] Đã nhận tín hiệu báo danh từ Zombie: 192.168.20.22
+          Payload mẫu nhận được: Action=register_to_cc_server
+    [C&C] Đã nhận tín hiệu báo danh từ Zombie: 192.168.20.24
+          Payload mẫu nhận được: Action=register_to_cc_server
+
+=> TỔNG KẾT: Có 7/10 thiết bị đã bị biến thành Botnet.
+
+[+] BƯỚC 4: XUẤT NHẬT KÝ LÂY NHIỄM RA OUTPUT.CSV...
+    -> Đã ghi file log lây nhiễm thành công tại: results/output.csv
+
+[V] HOÀN TẤT QUÁ TRÌNH MÔ PHỎNG TẤN CÔNG AN TOÀN.
+
+============================================================
+   KHỞI ĐỘNG HỆ THỐNG IDS (BLUE TEAM) - KIỂM TRA BẢO MẬT    
+============================================================
+[*] Đang phân tích hành vi mạng từ file log tập trung...
+
+[CẢNH BÁO ĐỎ] Thiết bị IP_Camera_Dahua tại 192.168.20.15 đang có hành vi kết nối đến C&C Server!
+   -> [Lỗ hổng nghiêm trọng] Phát hiện sử dụng mật khẩu yếu 'admin'.
+   -> Đề nghị đổi mật khẩu và cô lập thiết bị 192.168.20.15 ngay lập tức!
+
+[CẢNH BÁO ĐỎ] Thiết bị Smart_Bulb_Xiaomi tại 192.168.20.16 đang có hành vi kết nối đến C&C Server!
+   -> [Lỗ hổng nghiêm trọng] Phát hiện sử dụng mật khẩu yếu '12345'.
+   -> Đề nghị đổi mật khẩu và cô lập thiết bị 192.168.20.16 ngay lập tức!
+
+[CẢNH BÁO ĐỎ] Thiết bị IP_Camera_Hik tại 192.168.20.18 đang có hành vi kết nối đến C&C Server!
+   -> [Lỗ hổng nghiêm trọng] Phát hiện sử dụng mật khẩu yếu 'xc3511'.
+   -> Đề nghị đổi mật khẩu và cô lập thiết bị 192.168.20.18 ngay lập tức!
+
+[CẢNH BÁO ĐỎ] Thiết bị Smart_Fridge_SS tại 192.168.20.19 đang có hành vi kết nối đến C&C Server!
+   -> [Lỗ hổng nghiêm trọng] Phát hiện sử dụng mật khẩu yếu 'guest'.
+   -> Đề nghị đổi mật khẩu và cô lập thiết bị 192.168.20.19 ngay lập tức!
+
+[CẢNH BÁO ĐỎ] Thiết bị Smart_TV_Sony tại 192.168.20.20 đang có hành vi kết nối đến C&C Server!
+   -> [Lỗ hổng nghiêm trọng] Phát hiện sử dụng mật khẩu yếu 'admin'.
+   -> Đề nghị đổi mật khẩu và cô lập thiết bị 192.168.20.20 ngay lập tức!
+
+[CẢNH BÁO ĐỎ] Thiết bị IP_Camera_Axis tại 192.168.20.22 đang có hành vi kết nối đến C&C Server!
+   -> [Lỗ hổng nghiêm trọng] Phát hiện sử dụng mật khẩu yếu '12345'.
+   -> Đề nghị đổi mật khẩu và cô lập thiết bị 192.168.20.22 ngay lập tức!
+
+[CẢNH BÁO ĐỎ] Thiết bị DVR_Recorder tại 192.168.20.24 đang có hành vi kết nối đến C&C Server!
+   -> [Lỗ hổng nghiêm trọng] Phát hiện sử dụng mật khẩu yếu 'xc3511'.
+   -> Đề nghị đổi mật khẩu và cô lập thiết bị 192.168.20.24 ngay lập tức!
+
+------------------------------------------------------------
+[!!!] BÁO ĐỘNG: PHÁT HIỆN TỔNG CỘNG 7 THIẾT BỊ ĐÃ TRỞ THÀNH BOTNET.
+[*] Đề xuất hành động ứng phó khẩn cấp:
+    1. Đẩy rule chặn Port 23 vào Router (Xem file configs/firewall_rules.acl).
+    2. Cách ly vùng mạng VLAN 20 (Mạng IoT) ra khỏi mạng nội bộ.
