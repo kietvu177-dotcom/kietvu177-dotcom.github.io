@@ -1,0 +1,13 @@
+{
+"bot_id": "iot_cam_xyz_9982",
+"status": "online_and_waiting",
+"system_info": {
+"os": "Linux embedded",
+"architecture": "ARMv7",
+"cpu_usage_percent": 15,
+"ram_available_mb": 64
+},
+"action": "register_to_cc_server",
+"timestamp": "2026-07-23T10:15:00Z",
+"capabilities": ["tcp_flood", "udp_flood"]
+}
