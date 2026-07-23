@@ -1,0 +1,34 @@
+name: IoT Botnet Simulation & IDS Detection
+
+on:
+  workflow_dispatch: 
+
+jobs:
+  run-simulation:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Cài đặt Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Tạo thư mục kết quả (nếu chưa có)
+        run: mkdir -p results
+
+      - name: Chạy Red Team và Lưu file Log
+        # Dùng lệnh 'tee' để vừa hiển thị trên màn hình, vừa lưu vào file output_log.txt
+        run: python src/code_demo.py | tee results/output_log.txt
+
+      - name: Chạy Blue Team và Ghi nối tiếp vào Log
+        # Dùng 'tee -a' (append) để viết tiếp cảnh báo của IDS vào cùng file đó
+        run: python src/ids_detector.py | tee -a results/output_log.txt
+
+      - name: Xuất file báo cáo (Artifacts)
+        uses: actions/upload-artifact@v4
+        with:
+          name: Bang_Ket_Qua_Mophong
+          path: results/
